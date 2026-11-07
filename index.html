@@ -91,6 +91,12 @@ button{font:inherit;color:var(--tx);cursor:pointer}
 #nname{width:100%;min-height:48px;border-radius:12px;border:1px solid var(--bd);background:var(--term);color:var(--tx);padding:0 12px;font:16px "JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;outline:0}
 .nb{display:flex;gap:8px;margin-top:12px}.nb button{flex:1;min-height:46px;border-radius:12px;border:1px solid var(--bd);background:transparent;font-weight:700}
 #nok{border:0;color:#04121c;background:linear-gradient(90deg,var(--a),var(--b))}
+#ai .bar button{min-height:34px}
+.af{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border-bottom:1px solid var(--bd)}
+.af .ai{flex:none;width:22px;text-align:center;font-weight:800}.af.e .ai{color:var(--er)}.af.w .ai{color:#fbbf24}.af.ok .ai{color:var(--ok)}
+.af .am{flex:1;min-width:0}.af .am b{display:block;font-weight:600;word-break:break-word}.af small{display:block;margin-top:3px;color:var(--mu);word-break:break-word}
+.af button{flex:none;min-height:40px;padding:0 10px;border-radius:9px;border:1px solid var(--bd);background:transparent;font-size:12px}
+#aib p{margin:0;padding:10px 12px;color:var(--mu);font-size:13px}
 </style>
 </head>
 <body>
@@ -110,6 +116,7 @@ button{font:inherit;color:var(--tx);cursor:pointer}
 <div class="bar"><i></i><i></i><i></i><em data-i="output"></em><button id="cpo" data-i="copy"></button><span class="stat" id="st"></span></div>
 <pre id="out"></pre>
 </section>
+<section class="card" id="ai"><div class="bar"><i></i><i></i><i></i><em data-i="aiT"></em><button id="aiGo" data-i="aiCheck"></button></div><div id="aib"></div></section>
 <input type="file" id="file" hidden>
 </div>
 <div id="toast"></div>
@@ -169,11 +176,11 @@ lodash/lodash.js:
 </script>
 <script>
 const $=s=>document.querySelector(s);
-const T={vi:{run:'▶ CHẠY',stop:'■ DỪNG',save:'Lưu',open:'Mở file',qs:'Lưu',files:'Tệp',dl:'Tải về',sheetT:'TỆP ĐÃ LƯU',hint:'Tệp được lưu ngay trên thiết bị này, không đưa lên mạng.',empty:'Chưa có tệp nào. Đặt tên rồi bấm Lưu.',lines:'dòng',saved:'Đã lưu',noStore:'Không lưu được trên thiết bị này',overwrite:'Đã có tệp trùng tên. Ghi đè?',delq:'Xóa',saveAsT:'LƯU THÀNH TÊN',dlT:'TẢI VỀ VỚI TÊN',cancel:'Hủy',ph:'Tên file, vd: bai1',needName:'Hãy nhập tên file',share:'Link',copy:'Sao chép',install:'⤓ Cài app',output:'Terminal',ready:'Sẵn sàng',loading:'Đang tải trình chạy…',running:'Đang chạy…',waiting:'Gõ dữ liệu rồi bấm Enter',done:'Hoàn tất',timeout:'Quá 10 giây, đã dừng chương trình.',copied:'Đã sao chép'},
-en:{run:'▶ RUN',stop:'■ STOP',save:'Save',open:'Open file',qs:'Save',files:'Files',dl:'Download',sheetT:'SAVED FILES',hint:'Files are stored on this device only, not uploaded.',empty:'No files yet. Enter a name and tap Save.',lines:'lines',saved:'Saved',noStore:'Cannot save on this device',overwrite:'A file with this name exists. Overwrite?',delq:'Delete',saveAsT:'SAVE AS',dlT:'DOWNLOAD AS',cancel:'Cancel',ph:'File name, e.g. bai1',needName:'Enter a file name',share:'Link',copy:'Copy',install:'⤓ Install',output:'Terminal',ready:'Ready',loading:'Loading runtime…',running:'Running…',waiting:'Type input, then press Enter',done:'Done',timeout:'Over 10 seconds, program stopped.',copied:'Copied'}};
+const T={vi:{run:'▶ CHẠY',stop:'■ DỪNG',save:'Lưu',open:'Mở file',qs:'Lưu',files:'Tệp',dl:'Tải về',sheetT:'TỆP ĐÃ LƯU',hint:'Tệp được lưu ngay trên thiết bị này, không đưa lên mạng.',empty:'Chưa có tệp nào. Đặt tên rồi bấm Lưu.',lines:'dòng',saved:'Đã lưu',noStore:'Không lưu được trên thiết bị này',overwrite:'Đã có tệp trùng tên. Ghi đè?',delq:'Xóa',saveAsT:'LƯU THÀNH TÊN',dlT:'TẢI VỀ VỚI TÊN',cancel:'Hủy',ph:'Tên file, vd: bai1',needName:'Hãy nhập tên file',aiT:'Trợ lý code',aiCheck:'🔍 Kiểm tra',aiHint:'Bấm “Kiểm tra” hoặc chạy chương trình. Trợ lý sẽ chỉ ra chỗ sai và chỗ còn thiếu.',line:'Dòng',fix:'Gợi ý:',goto:'Đến dòng',aiNote:'Trợ lý chỉ nhận ra các lỗi thường gặp, không kiểm tra được kết quả có đúng đề bài hay không.',share:'Link',copy:'Sao chép',install:'⤓ Cài app',output:'Terminal',ready:'Sẵn sàng',loading:'Đang tải trình chạy…',running:'Đang chạy…',waiting:'Gõ dữ liệu rồi bấm Enter',done:'Hoàn tất',timeout:'Quá 10 giây, đã dừng chương trình.',copied:'Đã sao chép'},
+en:{run:'▶ RUN',stop:'■ STOP',save:'Save',open:'Open file',qs:'Save',files:'Files',dl:'Download',sheetT:'SAVED FILES',hint:'Files are stored on this device only, not uploaded.',empty:'No files yet. Enter a name and tap Save.',lines:'lines',saved:'Saved',noStore:'Cannot save on this device',overwrite:'A file with this name exists. Overwrite?',delq:'Delete',saveAsT:'SAVE AS',dlT:'DOWNLOAD AS',cancel:'Cancel',ph:'File name, e.g. bai1',needName:'Enter a file name',aiT:'Code assistant',aiCheck:'🔍 Check',aiHint:'Tap “Check” or run the program. The assistant points out mistakes and missing pieces.',line:'Line',fix:'Hint:',goto:'Go to line',aiNote:'The assistant only spots common mistakes; it cannot tell whether the result matches your assignment.',share:'Link',copy:'Copy',install:'⤓ Install',output:'Terminal',ready:'Ready',loading:'Loading runtime…',running:'Running…',waiting:'Type input, then press Enter',done:'Done',timeout:'Over 10 seconds, program stopped.',copied:'Copied'}};
 let lg=(function(){try{return localStorage.lg}catch(e){}})()||(navigator.language.startsWith('vi')?'vi':'en'),stKey='ready',isBusy=false;
 const t=k=>T[lg][k];
-function tr(){document.documentElement.lang=lg;document.querySelectorAll('[data-i]').forEach(e=>e.textContent=t(e.dataset.i));$('#run').textContent=t(isBusy?'stop':'run');setSt(stKey)}
+function tr(){document.documentElement.lang=lg;document.querySelectorAll('[data-i]').forEach(e=>e.textContent=t(e.dataset.i));$('#run').textContent=t(isBusy?'stop':'run');setSt(stKey);renderAI()}
 function setSt(k){stKey=k;const s=$('#st');s.textContent=t(k);s.className='stat'+(k==='waiting'?' wait':(k==='running'||k==='loading')?' busy':'')}
 $('#lg').onclick=()=>{lg=lg==='vi'?'en':'vi';try{localStorage.lg=lg}catch(e){}tr()};
 $('#th').onclick=()=>{const d=document.documentElement;d.dataset.theme=d.dataset.theme==='light'?'dark':'light';try{localStorage.th=d.dataset.theme}catch(e){}};
@@ -249,6 +256,158 @@ r.res.forEach(e=>{const x=document.createElement('button');const f=e[1].replace(
 function applySn(w,e){const c=$('#code'),p=c.selectionStart,r=snText(c.value,p,w,e);c.setSelectionRange(p-w.length,p);ins(c,r.t);if(r.back){const k=c.selectionStart-r.back;c.setSelectionRange(k,k)}updateSug()}
 ['keyup','click','focus','blur'].forEach(n=>$('#code').addEventListener(n,()=>setTimeout(updateSug,0)));
 
+/* ===== Assistant (rule-based error helper) ===== */
+const BI={python:'print input int float str len range list dict set tuple sum min max abs round sorted open type bool enumerate zip map filter'.split(' '),javascript:'console Math JSON Number String Array Object parseInt parseFloat prompt'.split(' '),c:'printf scanf puts gets getchar putchar fgets strlen strcpy strcmp strcat sqrt pow rand main'.split(' '),cpp:'printf scanf cout cin endl main sqrt pow'.split(' ')};
+const NEEDS={stdio:['printf','scanf','puts','gets','getchar','putchar','fgets','sprintf','sscanf','fopen','fprintf'],math:['sqrt','pow','sin','cos','tan','fabs','floor','ceil'],string:['strlen','strcpy','strcmp','strcat','strncpy','memset'],stdlib:['malloc','free','rand','srand','atoi','exit','system'],ctype:['toupper','tolower','isdigit','isalpha']};
+const HFILE={stdio:['stdio.h','cstdio'],math:['math.h','cmath'],string:['string.h','cstring'],stdlib:['stdlib.h','cstdlib'],ctype:['ctype.h','cctype']};
+function pr(s,n,vm,vf,em,ef){return{s:s,n:n,v:[vm,vf],e:[em,ef]}}
+function lev(a,b){const m=a.length,n=b.length;if(Math.abs(m-n)>2)return 9;const d=[];for(let i=0;i<=m;i++)d[i]=[i];for(let j=1;j<=n;j++)d[0][j]=j;for(let i=1;i<=m;i++)for(let j=1;j<=n;j++)d[i][j]=Math.min(d[i-1][j]+1,d[i][j-1]+1,d[i-1][j-1]+(a[i-1]===b[j-1]?0:1));return d[m][n]}
+function guessName(name,code,l){if(name.length<3)return'';const ids=new Set((code.match(/[A-Za-z_]\w*/g)||[]).concat(BI[l]||[],Array.from(KW[l]),Array.from(TY[l])));let best='',bd=3;ids.forEach(x=>{if(x===name||x.length<3)return;const d=lev(name.toLowerCase(),x.toLowerCase());if(d<bd){bd=d;best=x}});return best}
+function scan(code,l){const py=l==='python',js=l==='javascript',lines=code.split('\n'),cl=[],ds=[],de=[],pd=[],pe=[],out=[],st=[],OP={'(':')','[':']','{':'}'};let blk=false,tri=null,tpl=false,broken=false,pb=0;
+for(let i=0;i<lines.length;i++){const s=lines[i],n=i+1;let o='',k=0;ds[i]=st.length;pd[i]=pb;
+while(k<s.length){const ch=s[k],two=s.substr(k,2),three=s.substr(k,3);
+if(blk){if(two==='*/'){blk=false;k+=2;o+='  '}else{k++;o+=' '}continue}
+if(tri){if(three===tri){tri=null;k+=3;o+='   '}else{k++;o+=' '}continue}
+if(tpl){if(ch==='\\'){k+=2;o+='  '}else{if(ch==='`')tpl=false;k++;o+=' '}continue}
+if(py&&ch==='#')break;
+if(!py&&two==='//')break;
+if(!py&&two==='/*'){blk=true;k+=2;o+='  ';continue}
+if(py&&(three==='"""'||three==="'''")){tri=three;k+=3;o+='   ';continue}
+if(js&&ch==='`'){tpl=true;k++;o+=' ';continue}
+if(ch==='"'||ch==="'"){let j=k+1,closed=false;while(j<s.length){if(s[j]==='\\'){j+=2;continue}if(s[j]===ch){closed=true;break}j++}
+if(!closed){out.push(pr('e',n,'Chuỗi mở bằng dấu '+ch+' nhưng chưa được đóng lại.','Thêm dấu '+ch+' để đóng chuỗi.','A string opened with '+ch+' is never closed.','Add the closing '+ch+'.'));o+=' '.repeat(Math.max(0,s.length-k));k=s.length}
+else{o+=ch+' '.repeat(j-k-1)+ch;k=j+1}continue}
+if(OP[ch]){st.push({c:ch,n:n});if(ch!=='{')pb++;o+=ch;k++;continue}
+if(ch===')'||ch===']'||ch==='}'){const top=st[st.length-1];
+if(!top){if(!broken){broken=true;out.push(pr('e',n,'Dấu '+ch+' bị thừa, không có dấu mở tương ứng.','Xóa dấu '+ch+' này, hoặc thêm dấu mở '+(ch===')'?'(':ch===']'?'[':'{')+' ở phía trước.','The '+ch+' has no matching opening bracket.','Remove this '+ch+' or add the missing opening bracket before it.'))}}
+else{if(OP[top.c]!==ch&&!broken){broken=true;out.push(pr('e',top.n,'Dấu '+top.c+' mở ở dòng này chưa được đóng bằng '+OP[top.c]+' (đến dòng '+n+' đã gặp dấu '+ch+').','Thêm dấu '+OP[top.c]+' vào chỗ thích hợp, rồi kiểm tra lại các cặp ngoặc ( ) [ ] { }.','The '+top.c+' opened on this line is not closed with '+OP[top.c]+' (a '+ch+' appears on line '+n+' first).','Add the missing '+OP[top.c]+' where it belongs, then re-check every ( ) [ ] { } pair.'))}const pp=st.pop();if(pp.c!=='{')pb--}
+o+=ch;k++;continue}
+o+=ch;k++}
+cl.push(o);de[i]=st.length;pe[i]=pb}
+if(!broken&&st.length){const t=st[st.length-1];out.push(pr('e',t.n,'Dấu '+t.c+' mở ở đây nhưng chưa có dấu '+OP[t.c]+' đóng.','Thêm dấu '+OP[t.c]+' vào chỗ thích hợp (thường ở cuối câu lệnh hoặc cuối khối).','The '+t.c+' opened here is never closed with '+OP[t.c]+'.','Add the missing '+OP[t.c]+' (usually at the end of the statement or block).'))}
+if(tri)out.push(pr('e',null,'Chuỗi nhiều dòng (""") chưa được đóng.','Thêm """ để đóng.','A multi-line string (""") is never closed.','Add the closing """.'));
+if(blk)out.push(pr('e',null,'Chú thích /* ... */ chưa được đóng.','Thêm */ để đóng chú thích.','A /* ... */ comment is never closed.','Add */ to close it.'));
+return{lines:lines,cl:cl,ds:ds,de:de,pd:pd,pe:pe,out:out}}
+function splitArgs(s){const a=[];let d=0,q=null,cur='';for(let i=0;i<s.length;i++){const c=s[i];if(q){cur+=c;if(c==='\\'){cur+=s[++i]||''}else if(c===q)q=null;continue}if(c==='"'||c==="'"){q=c;cur+=c;continue}if(c==='('||c==='['||c==='{')d++;if(c===')'||c===']'||c==='}')d--;if(c===','&&d===0){a.push(cur.trim());cur=''}else cur+=c}if(cur.trim())a.push(cur.trim());return a}
+function eqInCond(t,start){let d=0,b=-1;for(let k=start;k<t.length;k++){if(t[k]==='(')d++;else if(t[k]===')'){d--;if(d===0){b=k;break}}}const inner=b>0?t.slice(start+1,b):t.slice(start+1);let dd=0;for(let k=0;k<inner.length;k++){const c=inner[k];if(c==='('||c==='[')dd++;else if(c===')'||c===']')dd--;else if(c==='='&&dd===0){const p=inner[k-1],nx=inner[k+1];if(nx==='='||p==='='||p==='!'||p==='<'||p==='>'||p===':')continue;return true}}return false}
+function bodyC(cl,i){let d=0,started=false,out='';for(let k=i;k<cl.length;k++){const x=cl[k];out+=x+'\n';for(const c of x){if(c==='{'){d++;started=true}else if(c==='}')d--}if(started&&d<=0)break;if(!started&&k>i)break}return out}
+function bodyPy(cl,i){const ind=x=>x.match(/^[ \t]*/)[0].replace(/\t/g,'    ').length,b=ind(cl[i]);let out='';for(let k=i+1;k<cl.length;k++){if(!cl[k].trim())continue;if(ind(cl[k])<=b)break;out+=cl[k]+'\n'}return out}
+function nextLine(cl,i){for(let k=i+1;k<cl.length;k++){const x=cl[k].trim();if(x)return x}return''}
+function rulesC(code,l,S,P){const cl=S.cl,ol=S.lines,all=cl.join('\n');
+if(!/\bmain\s*\(/.test(all))P(pr('e',null,'Chưa có hàm main(). Chương trình C/C++ luôn bắt đầu chạy từ main.','Thêm: int main() { ... return 0; }','There is no main() function. C/C++ programs always start from main.','Add: int main() { ... return 0; }'));
+const bits=/<bits\/stdc\+\+\.h>/.test(code);
+for(const k in NEEDS){if(bits||HFILE[k].some(h=>code.indexOf('<'+h+'>')>=0))continue;const re=new RegExp('(^|[^\\w.>])('+NEEDS[k].join('|')+')\\s*\\(');
+for(let i=0;i<cl.length;i++){const m=cl[i].match(re);if(m&&!new RegExp('\\b(int|void|float|double|char|long|short|unsigned|bool)\\s+'+m[2]+'\\s*\\(').test(cl[i])){const h=l==='cpp'?'<'+HFILE[k][1]+'> (hoặc <'+HFILE[k][0]+'>)':'<'+HFILE[k][0]+'>';const h2=l==='cpp'?'<'+HFILE[k][1]+'> (or <'+HFILE[k][0]+'>)':'<'+HFILE[k][0]+'>';P(pr('e',i+1,'Dùng '+m[2]+'() nhưng chưa có #include '+h+' ở đầu file.','Thêm dòng #include '+h+' lên trên cùng.',m[2]+'() is used but #include '+h2+' is missing at the top.','Add #include '+h2+' at the very top.'));break}}}
+if(l==='cpp'&&/\bcout\b|\bcin\b/.test(all)&&!/using\s+namespace\s+std/.test(all)&&!/std::(cout|cin)/.test(all)){const i=cl.findIndex(x=>/\b(cout|cin)\b/.test(x));P(pr('w',i+1,'Dùng cout/cin nhưng chưa có "using namespace std;". Trình biên dịch thật sẽ báo lỗi.','Thêm using namespace std; sau các dòng #include.','cout/cin is used without "using namespace std;". A real compiler will report an error.','Add using namespace std; after the #include lines.'))}
+const loopInf=cl.findIndex(x=>/\bwhile\s*\(\s*(1|true)\s*\)|\bfor\s*\(\s*;\s*;\s*\)/.test(x));if(loopInf>=0&&!/\bbreak\b|\breturn\b|\bexit\s*\(|\bgoto\b/.test(bodyC(cl,loopInf)))P(pr('w',loopInf+1,'Vòng lặp vô hạn và không có break/return nên chương trình sẽ không dừng.','Thêm điều kiện thoát bằng break, hoặc sửa điều kiện vòng lặp.','Infinite loop with no break/return: the program will never stop.','Add an exit condition with break, or fix the loop condition.'));
+for(let i=0;i<cl.length;i++){const t=cl[i].trim(),n=i+1;if(!t||t[0]==='#')continue;
+if(/\bif\s*\(.*\)\s*then\b/.test(t))P(pr('e',n,'C/C++ không có chữ "then" sau if.','Viết: if (điều kiện) { ... } — không có then.','C/C++ has no "then" after if.','Write: if (condition) { ... } — no then.'));
+if(/\b(elseif|elif)\b/.test(t))P(pr('e',n,'C/C++ không có elseif/elif.','Viết thành hai từ: else if (điều kiện) { ... }','C/C++ has no elseif/elif.','Write it as two words: else if (condition) { ... }'));
+if(l==='cpp'&&(/\bcout\s*>>/.test(t)||/\bcin\s*<</.test(t)))P(pr('e',n,'Sai chiều toán tử: cout dùng <<, cin dùng >>.','Đổi thành cout << ... hoặc cin >> ...','Wrong operator direction: cout uses <<, cin uses >>.','Use cout << ... or cin >> ...'));
+const mi=t.match(/\b(if|while)\s*\(/);if(mi&&eqInCond(t,t.indexOf('(',mi.index)))P(pr('w',n,'Trong điều kiện '+mi[1]+' có dấu = (phép gán) — có thể bạn muốn so sánh.','Dùng == để so sánh bằng, ví dụ: if (a == 5).','The '+mi[1]+' condition contains = (assignment), you probably want a comparison.','Use == to compare, e.g. if (a == 5).'));
+const mf=ol[i].match(/\b(printf|scanf)\s*\(\s*"((?:\\.|[^"\\])*)"\s*(?:,(.*))?\)/);
+if(mf&&cl[i].indexOf(mf[1])>=0){const fmt=mf[2].replace(/%%/g,''),specs=fmt.match(/%[-+ #0]*(\*|\d+)?(\.(\*|\d+))?(hh|h|ll|l|L|z|j|t)?[diuoxXfFeEgGaAcspn]/g)||[],args=mf[3]?splitArgs(mf[3]):[];
+if(!/%\*/.test(fmt)&&specs.length!==args.length){const few=args.length<specs.length;P(pr('w',n,mf[1]+' có '+specs.length+' chỗ % nhưng '+(few?'chỉ có ':'lại có ')+args.length+' giá trị đi kèm.',few?'Thêm giá trị còn thiếu sau dấu phẩy, mỗi % cần một giá trị.':'Bớt giá trị thừa, hoặc thêm % tương ứng trong chuỗi.',mf[1]+' has '+specs.length+' % placeholders but '+args.length+' value(s).',few?'Add the missing value(s) after the comma: each % needs one.':'Remove the extra value(s) or add matching % in the string.'))}
+if(mf[1]==='scanf'){specs.forEach((sp,k)=>{const a=args[k];if(a&&!/s$|\[/.test(sp)&&/^[A-Za-z_]\w*$/.test(a)&&!new RegExp('\\b'+a+'\\s*\\[').test(all)&&!new RegExp('\\*\\s*'+a+'\\b').test(all))P(pr('e',n,'scanf thiếu dấu & trước biến "'+a+'".','Viết &'+a+' thay vì '+a+'.','scanf is missing the & before variable "'+a+'".','Write &'+a+' instead of '+a+'.'))})}}
+if(S.pd[i]===0&&S.pe[i]===0&&!/[;{}:,(\[\\]$/.test(t)&&!/[+\-*\/%<>=&|^!?.]$/.test(t)){const nx=nextLine(cl,i);if(/^[+\-*\/%<>=&|^?.:]/.test(nx)&&!/^(\+\+|--)/.test(nx))continue;
+const starter=/^(printf|scanf|puts|gets|getchar|putchar|fgets|strcpy|strcat|cout|cin|return|break|continue|exit)\b/.test(t),decl=/^(int|float|double|char|long|short|unsigned|signed|bool|size_t)\b[^({]*$/.test(t),assign=/^[A-Za-z_]\w*(\[[^\]]*\])?\s*([+\-*\/%&|^]?=[^=]|\+\+|--)/.test(t)&&!/^(if|for|while|switch|else)\b/.test(t);
+if(starter||decl||assign)P(pr('w',n,'Có thể thiếu dấu ; ở cuối dòng này.','Mỗi câu lệnh trong C/C++ phải kết thúc bằng dấu ;','A ; may be missing at the end of this line.','Every C/C++ statement must end with ;'))}}}
+function rulesPy(code,S,P){const cl=S.cl,ind=x=>x.match(/^[ \t]*/)[0].replace(/\t/g,'    ').length;let tabs=false,sp=false;
+for(let i=0;i<cl.length;i++){const raw=cl[i],t=raw.trim(),n=i+1;if(!t)continue;const lead=raw.match(/^[ \t]*/)[0];if(/\t/.test(lead))tabs=true;else if(lead.length)sp=true;if(S.ds[i]>0)continue;
+const km=t.match(/^(if|elif|else|for|while|def|class|try|except|finally|with)\b/);
+if(km&&t.indexOf(':')<0)P(pr('e',n,'Thiếu dấu : ở cuối dòng '+km[1]+'.','Thêm dấu : vào cuối dòng, ví dụ: '+(km[1]==='else'||km[1]==='try'||km[1]==='finally'?km[1]+':':km[1]+' ...:'),'Missing : at the end of the '+km[1]+' line.','Add a : at the end of the line, e.g. '+(km[1]==='else'||km[1]==='try'||km[1]==='finally'?km[1]+':':km[1]+' ...:')));
+const cm=t.match(/^(if|elif|while)\b(.*)$/);if(cm){const c=cm[2],ci=c.indexOf(':'),cond=ci>=0?c.slice(0,ci):c;if(eqInCond('('+cond+')',0))P(pr('e',n,'Trong điều kiện '+cm[1]+' dùng = (gán) — phải dùng == để so sánh.','Sửa = thành ==, ví dụ: '+cm[1]+' x == 5:','Use == (compare) instead of = (assign) in the '+cm[1]+' condition.','Change = to ==, e.g. '+cm[1]+' x == 5:'))}
+if(/^print\s+[^\s(=]/.test(t))P(pr('e',n,'Python 3 cần dấu ngoặc cho print.','Viết print(...) thay vì print ...','Python 3 needs parentheses for print.','Write print(...) instead of print ...'));
+if(/^else\s+if\b/.test(t)||/^elseif\b/.test(t))P(pr('e',n,'Python dùng elif (một từ), không phải else if.','Đổi thành: elif điều_kiện:','Python uses elif (one word), not else if.','Change to: elif condition:'));
+if(/&&|\|\|/.test(t))P(pr('w',n,'Python không dùng && và ||.','Dùng and, or thay cho &&, ||.','Python does not use && or ||.','Use and / or instead of && / ||.'));
+if(/\b\w+\s*(\+\+|--)\s*$/.test(t))P(pr('e',n,'Python không có toán tử ++ hoặc --.','Viết i += 1 (hoặc i -= 1).','Python has no ++ or -- operator.','Write i += 1 (or i -= 1).'));
+if(/\b(printf|scanf|cout|cin)\b/.test(t)&&!/^\s*(#|import)/.test(t))P(pr('w',n,'printf/scanf/cout/cin là của C/C++, không dùng trong Python.','Dùng print(...) để in và input(...) để nhập.','printf/scanf/cout/cin are C/C++, not Python.','Use print(...) to print and input(...) to read.'));
+if(/:\s*$/.test(t)){const j=cl.findIndex((x,k)=>k>i&&x.trim());if(j>=0&&ind(cl[j])<=ind(raw))P(pr('e',j+1,'Dòng này cần thụt lề vào, vì dòng '+n+' kết thúc bằng dấu :','Thêm 4 khoảng trắng ở đầu dòng này.','This line must be indented because line '+n+' ends with :','Add 4 spaces at the start of this line.'))}}
+if(tabs&&sp)P(pr('w',null,'Code đang trộn lẫn dấu Tab và khoảng trắng để thụt lề.','Chỉ dùng một kiểu (nên dùng 4 khoảng trắng).','Indentation mixes tabs and spaces.','Use one style only (4 spaces recommended).'));
+const all=cl.join('\n');const iv={};cl.forEach((x,i)=>{const m=x.match(/^\s*(\w+)\s*=\s*input\s*\(/);if(m&&iv[m[1]]==null)iv[m[1]]=i+1});
+Object.keys(iv).forEach(v=>{const re=new RegExp('\\b'+v+'\\s*[-+/%<>]=?\\s*\\d|\\d\\s*[-+/<>]\\s*'+v+'\\b');for(let i=iv[v];i<cl.length;i++){if(re.test(cl[i])&&!new RegExp('\\b(int|float)\\s*\\(\\s*'+v+'\\b').test(cl[i])){P(pr('w',i+1,'"'+v+'" lấy từ input() là chữ, không phải số nên không tính toán/so sánh với số được.','Dùng int(input(...)) hoặc float(input(...)) khi nhập số (dòng '+iv[v]+').','"'+v+'" comes from input() so it is text, not a number.','Use int(input(...)) or float(input(...)) for numbers (line '+iv[v]+').'));break}}});
+const wi=cl.findIndex(x=>/^\s*while\s+(True|1)\s*:/.test(x));if(wi>=0&&!/\bbreak\b|\breturn\b|\bexit\s*\(/.test(bodyPy(cl,wi)))P(pr('w',wi+1,'Vòng lặp while True không có break nên chương trình sẽ không dừng.','Thêm điều kiện thoát bằng break.','while True with no break: the program will never stop.','Add an exit condition with break.'))}
+function rulesJs(code,S,P){const cl=S.cl,all=cl.join('\n');
+for(let i=0;i<cl.length;i++){const t=cl[i].trim(),n=i+1;if(!t)continue;
+if(/\b(elseif|elif)\b/.test(t))P(pr('e',n,'JavaScript viết else if (hai từ).','Đổi thành: else if (điều kiện) { ... }','JavaScript uses else if (two words).','Change to: else if (condition) { ... }'));
+if(/\bif\s*\(.*\)\s*then\b/.test(t))P(pr('e',n,'JavaScript không có chữ "then" sau if.','Viết: if (điều kiện) { ... }','JavaScript has no "then" after if.','Write: if (condition) { ... }'));
+const mi=t.match(/\b(if|while)\s*\(/);if(mi&&eqInCond(t,t.indexOf('(',mi.index)))P(pr('w',n,'Trong điều kiện '+mi[1]+' có dấu = (gán) — có thể bạn muốn so sánh.','Dùng === (hoặc ==) để so sánh.','The '+mi[1]+' condition contains = (assignment), you probably want a comparison.','Use === (or ==) to compare.'));
+if(/\bConsole\./.test(t))P(pr('e',n,'Phải viết thường: console (không viết hoa C).','Sửa thành console.log(...)','It must be lowercase: console (not Console).','Change to console.log(...)'));
+if(/(^|[^.\w])(printf|scanf|cout|cin)\b/.test(t)||/^print\s*\(/.test(t))P(pr('w',n,'printf/print/cout là của ngôn ngữ khác, JavaScript in bằng console.log.','Dùng console.log(...) để in.','printf/print/cout belong to other languages; JavaScript prints with console.log.','Use console.log(...) to print.'));
+if(/System\.out\./.test(t))P(pr('e',n,'System.out.println là của Java, web chưa hỗ trợ Java.','Dùng console.log(...) trong JavaScript.','System.out.println is Java, which is not supported here yet.','Use console.log(...) in JavaScript.'))}
+const pv={};cl.forEach((x,i)=>{const m=x.match(/(?:const|let|var)\s+(\w+)\s*=\s*prompt\s*\(/);if(m&&pv[m[1]]==null)pv[m[1]]=i+1});
+Object.keys(pv).forEach(v=>{const re=new RegExp('\\b'+v+'\\s*[-+/%<>]=?\\s*\\d|\\d\\s*[-+/<>]\\s*'+v+'\\b');for(let i=pv[v];i<cl.length;i++){if(re.test(cl[i])){P(pr('w',i+1,'"'+v+'" lấy từ prompt() là chữ, nên phép + sẽ nối chữ thay vì cộng số.','Dùng Number(prompt(...)) khi nhập số (dòng '+pv[v]+').','"'+v+'" comes from prompt() so it is text; + joins text instead of adding.','Use Number(prompt(...)) for numbers (line '+pv[v]+').'));break}}});
+const wi=cl.findIndex(x=>/\bwhile\s*\(\s*(true|1)\s*\)|\bfor\s*\(\s*;\s*;\s*\)/.test(x));if(wi>=0&&!/\bbreak\b|\breturn\b/.test(bodyC(cl,wi)))P(pr('w',wi+1,'Vòng lặp vô hạn và không có break nên chương trình sẽ không dừng.','Thêm điều kiện thoát bằng break.','Infinite loop with no break: the program will never stop.','Add an exit condition with break.'))}
+function lint(code,l){code=code.replace(/\r/g,'');const S=scan(code,l),F=S.out.slice(),P=f=>F.push(f);if(!code.trim())return[pr('w',null,'Chưa có code để kiểm tra.','Hãy viết code vào khung phía trên.','There is no code to check.','Write some code in the editor above.')];
+if(l==='c'||l==='cpp')rulesC(code,l,S,P);else if(l==='python')rulesPy(code,S,P);else rulesJs(code,S,P);
+if(/System\.out\.|public\s+static\s+void\s+main/.test(code)&&l!=='javascript')P(pr('e',null,'Đây là code Java, web chưa hỗ trợ Java.','Chọn C, C++, Python hoặc JavaScript.','This is Java code, which is not supported yet.','Pick C, C++, Python or JavaScript.'));
+return F}
+function lineOff(code,n){const lines=code.split('\n'),m=lines.findIndex(x=>/#\s*include\s*<bits\/stdc\+\+\.h>/.test(x));return(m>=0&&n>m+1)?n-4:n}
+function runtimeFind(err,code,l,timedOut){const F=[],e=err.replace(/\r/g,'');
+if(timedOut)F.push(pr('e',null,'Chương trình chạy quá 10 giây nên đã bị dừng.','Có thể vòng lặp không bao giờ kết thúc (kiểm tra điều kiện dừng / break), hoặc code đang làm việc quá nặng.','The program ran for over 10 seconds and was stopped.','A loop may never end (check the stop condition / break), or the work is too heavy.'));
+if(!e.trim())return F;
+if(l==='python'){const lm=Array.from(e.matchAll(/File "<exec>", line (\d+)/g)),n=lm.length?+lm[lm.length-1][1]:null,ls=e.trim().split('\n').filter(x=>x.trim()),last=ls[ls.length-1]||'';let m=null;for(let k=ls.length-1;k>=0&&!m;k--)m=ls[k].match(/^(\w*(?:Error|Exception|Exit|Interrupt))(?::\s*(.*))?$/);const T=m?m[1]:'',M=m&&m[2]?m[2]:'';let q;const add=(a,b,c,d)=>F.push(pr('e',n,a,b,c,d)),gen=(a,b,c,d)=>{const f=pr('e',n,a,b,c,d);f.g=1;F.push(f)};
+if(/^(SyntaxError|IndentationError|TabError)$/.test(T)){
+if(/never closed/.test(M))add('Có dấu ngoặc mở nhưng chưa được đóng lại.','Thêm dấu ) ] hoặc } còn thiếu.','A bracket was opened but never closed.','Add the missing ) ] or }.');
+else if(/unterminated string/.test(M))add('Chuỗi thiếu dấu nháy đóng.','Thêm dấu " hoặc \' để đóng chuỗi.','The string is missing its closing quote.','Add the closing " or \'.');
+else if(/expected ':'/.test(M))add('Thiếu dấu : ở cuối dòng.','Thêm dấu : vào cuối dòng if/for/while/def...','A : is missing at the end of the line.','Add : at the end of the if/for/while/def line.');
+else if(/Missing parentheses in call to 'print'/.test(M))add('print cần có dấu ngoặc.','Viết print(...)','print needs parentheses.','Write print(...)');
+else if(/unexpected indent/.test(M))add('Dòng này bị thụt lề thừa.','Xóa bớt khoảng trắng ở đầu dòng cho thẳng hàng với dòng trên.','This line is indented too far.','Remove spaces so it lines up with the line above.');
+else if(/expected an indented block/.test(M))add('Sau dòng kết thúc bằng : phải thụt lề dòng tiếp theo.','Thêm 4 khoảng trắng ở đầu dòng bên dưới.','The line after one ending with : must be indented.','Add 4 spaces at the start of the next line.');
+else if(/unindent does not match/.test(M))add('Thụt lề không khớp với các dòng phía trên.','Dùng cùng số khoảng trắng cho các dòng cùng khối.','The indentation does not match the lines above.','Use the same number of spaces for lines in the same block.');
+else gen('Sai cú pháp ở dòng này'+(M&&!/invalid syntax/.test(M)?' ('+M+')':'')+'.','Kiểm tra dấu :, dấu ngoặc, dấu nháy, và cả dòng ngay phía trên nó.','Syntax error on this line'+(M&&!/invalid syntax/.test(M)?' ('+M+')':'')+'.','Check colons, brackets, quotes, and the line just above it.')}
+else if(T==='NameError'&&(q=M.match(/name '(.+?)' is not defined/))){const g=guessName(q[1],code,l);add('Tên "'+q[1]+'" chưa được khai báo hoặc gõ sai.',(g?'Có phải ý bạn là "'+g+'"? ':'')+'Hãy gán giá trị cho biến trước khi dùng và kiểm tra chữ hoa/thường.','The name "'+q[1]+'" is not defined or misspelled.',(g?'Did you mean "'+g+'"? ':'')+'Assign the variable before using it and check upper/lower case.')}
+else if(T==='TypeError'&&/concatenate|unsupported operand|can't multiply|not supported between/.test(M))add('Đang trộn chữ (str) với số (int) trong một phép tính.','Đổi kiểu: int("5") để thành số, str(5) để thành chữ. Nhập số thì dùng int(input(...)).','You are mixing text (str) with numbers (int) in one operation.','Convert: int("5") for a number, str(5) for text. For numeric input use int(input(...)).');
+else if(T==='TypeError'&&/not callable/.test(M))add('Đang gọi như hàm nhưng đó không phải hàm: '+M,'Kiểm tra có đặt tên biến trùng tên hàm không (ví dụ biến tên sum, list, str).','Calling something that is not a function: '+M,'Check whether a variable shadows a function name (e.g. sum, list, str).');
+else if(T==='TypeError'&&/positional argument|required/.test(M))add('Gọi hàm sai số lượng tham số: '+M,'So sánh số tham số khi gọi với khi định nghĩa hàm.','Wrong number of arguments: '+M,'Compare the arguments in the call with the function definition.');
+else if(T==='TypeError')add('Sai kiểu dữ liệu: '+M,'Kiểm tra kiểu của các giá trị trong dòng này.','Wrong data type: '+M,'Check the types of the values on this line.');
+else if(T==='ValueError'&&(q=M.match(/invalid literal for int\(\) with base 10: (.+)/)))add('Không đổi được '+q[1]+' thành số nguyên.','Chỉ nhập số nguyên (không có chữ, dấu cách, dấu phẩy thập phân).','Cannot convert '+q[1]+' to an integer.','Enter whole numbers only (no letters, spaces or decimal commas).');
+else if(T==='ValueError'&&/could not convert string to float/.test(M))add('Không đổi được chữ thành số thực: '+M.replace('could not convert string to float: ',''),'Chỉ nhập số, dùng dấu chấm cho số thập phân (3.14).','Cannot convert text to a float: '+M.replace('could not convert string to float: ',''),'Enter numbers only, use a dot for decimals (3.14).');
+else if(T==='ValueError'&&/not enough values to unpack|too many values to unpack/.test(M))add('Số giá trị nhập không khớp số biến nhận: '+M,'Nhập đủ số giá trị cách nhau bởi dấu cách, đúng số biến.','The number of values does not match the number of variables: '+M,'Enter exactly as many values as variables, separated by spaces.');
+else if(T==='ZeroDivisionError')add('Chia cho 0 (không chia được).','Kiểm tra mẫu số trước khi chia, ví dụ: if b != 0:','Division by zero.','Check the divisor first, e.g. if b != 0:');
+else if(T==='IndexError')add('Chỉ số vượt quá độ dài của danh sách/chuỗi.','Chỉ số bắt đầu từ 0 và tối đa là len(...)-1.','The index is outside the list/string.','Indexes start at 0 and go up to len(...)-1.');
+else if(T==='KeyError')add('Khóa '+M+' không có trong dictionary.','Kiểm tra chính tả khóa, hoặc dùng d.get(khóa).','Key '+M+' is not in the dictionary.','Check the spelling of the key, or use d.get(key).');
+else if(T==='AttributeError')add('Đối tượng không có thuộc tính/hàm này: '+M,'Kiểm tra chính tả tên hàm và kiểu của biến.','The object has no such attribute/method: '+M,'Check the spelling and the variable type.');
+else if(T==='ModuleNotFoundError'||T==='ImportError'){const mn=(M.match(/(?:No module named|The module) '(.+?)'/)||[])[1]||M;add('Web chưa có thư viện "'+mn+'".','Chỉ dùng thư viện có sẵn của Python như math, random, datetime... (numpy, pandas chưa hỗ trợ).','The library "'+mn+'" is not available here.','Use only built-in Python libraries such as math, random, datetime (numpy, pandas are not supported).')}
+else if(T==='RecursionError')add('Hàm gọi lại chính nó quá nhiều lần.','Thêm điều kiện dừng cho hàm đệ quy.','The function calls itself too many times.','Add a stopping condition to the recursive function.');
+else if(T==='EOFError')add('Chương trình cần nhập thêm dữ liệu nhưng không còn.','Nhập đủ dữ liệu khi chương trình hỏi.','The program needs more input but there is none.','Enter data whenever the program asks.');
+else gen('Chương trình báo lỗi: '+(last.slice(0,140)),'Đọc dòng cuối của thông báo lỗi trong Terminal, thường nói rõ loại lỗi.','The program reported an error: '+(last.slice(0,140)),'Read the last line of the error in the Terminal; it usually names the problem.')}
+else if(l==='javascript'){const last=e.trim().split('\n').filter(x=>x.trim())[0]||'',m=last.match(/^(\w*Error):\s*(.*)$/),T=m?m[1]:'',M=m?m[2]:last;let q;const add=(a,b,c,d)=>F.push(pr('e',null,a,b,c,d));
+if(T==='ReferenceError'&&(q=M.match(/(\w+) is not defined/))){const g=guessName(q[1],code,l);add('Tên "'+q[1]+'" chưa được khai báo hoặc gõ sai.',(g?'Có phải ý bạn là "'+g+'"? ':'')+'Khai báo bằng let/const trước khi dùng, và kiểm tra chữ hoa/thường.','The name "'+q[1]+'" is not defined or misspelled.',(g?'Did you mean "'+g+'"? ':'')+'Declare it with let/const before using it and check upper/lower case.')}
+else if(T==='SyntaxError')add('Sai cú pháp: '+M,'Kiểm tra dấu ngoặc ( ) { } [ ], dấu nháy, dấu phẩy, và dòng ngay trước chỗ lỗi.','Syntax error: '+M,'Check brackets ( ) { } [ ], quotes, commas, and the line just before the problem.');
+else if(T==='TypeError'&&/is not a function/.test(M))add('Gọi hàm không tồn tại: '+M,'Kiểm tra chính tả tên hàm (phân biệt hoa/thường).','Calling something that is not a function: '+M,'Check the spelling of the function name (case matters).');
+else if(T==='TypeError'&&/Cannot read propert/.test(M))add('Đang đọc thuộc tính của giá trị chưa có (undefined/null): '+M,'Kiểm tra biến đã được gán giá trị chưa trước khi dùng.','Reading a property of a missing value (undefined/null): '+M,'Check the variable has a value before using it.');
+else if(T==='TypeError'&&/Assignment to constant/.test(M))add('Biến khai báo bằng const không được gán lại.','Đổi const thành let nếu cần thay đổi giá trị.','A const variable cannot be reassigned.','Change const to let if the value must change.');
+else if(T==='RangeError')add('Giá trị/đệ quy vượt giới hạn: '+M,'Kiểm tra điều kiện dừng của hàm đệ quy hoặc giá trị đưa vào.','Value or recursion out of range: '+M,'Check the stopping condition of recursion or the value passed in.');
+else add('Chương trình báo lỗi: '+last.slice(0,140),'Đọc thông báo lỗi trong Terminal để biết loại lỗi.','The program reported an error: '+last.slice(0,140),'Read the error in the Terminal to see what kind of error it is.')}
+else{const lastLine=e.trim().split('\n').filter(x=>x.trim())[0]||'';let q;
+if(/Parsing Failure/.test(e)&&(q=e.match(/line (\d+) \(column (\d+)\)/))){const n=lineOff(code,+q[1]);F.push(Object.assign(pr('e',n,'Cú pháp sai ở dòng '+n+' (cột '+q[2]+').','Thường do thiếu dấu ; ở cuối dòng trước, thiếu ) hoặc }, hoặc chưa đóng dấu nháy. Hãy xem dòng này và dòng ngay phía trên nó.','Syntax error at line '+n+' (column '+q[2]+').','Usually a missing ; at the end of the previous line, a missing ) or }, or an unclosed quote. Check this line and the one above.'),{g:1}))}
+else if(q=e.match(/(?:^|\n)\s*(?:ERR )?(\d+):(\d+) variable (\w+) does not exist/)){const n=lineOff(code,+q[1]),nm=q[3];let k=null;for(const key in NEEDS)if(NEEDS[key].indexOf(nm)>=0)k=key;
+if(k)F.push(pr('e',n,nm+' chưa được khai báo — thiếu #include '+(l==='cpp'?'<'+HFILE[k][1]+'> (hoặc <'+HFILE[k][0]+'>)':'<'+HFILE[k][0]+'>')+'.','Thêm dòng #include đó lên đầu file.',nm+' is not declared — #include '+(l==='cpp'?'<'+HFILE[k][1]+'> (or <'+HFILE[k][0]+'>)':'<'+HFILE[k][0]+'>')+' is missing.','Add that #include line at the top of the file.'));
+else{const g=guessName(nm,code,l);F.push(pr('e',n,'Biến/hàm "'+nm+'" chưa được khai báo hoặc gõ sai.',(g?'Có phải ý bạn là "'+g+'"? ':'')+'Khai báo biến trước khi dùng (ví dụ int '+nm+';) và kiểm tra chữ hoa/thường.','Variable/function "'+nm+'" is not declared or misspelled.',(g?'Did you mean "'+g+'"? ':'')+'Declare it before use (e.g. int '+nm+';) and check upper/lower case.'))}}
+else if(q=e.match(/(\d+):(\d+) Memory overflow/)){const n=lineOff(code,+q[1]);F.push(pr('e',n,'Lỗi bộ nhớ ở dòng này — thường do scanf thiếu dấu & trước biến.','Viết scanf("%d", &a); (có & trước tên biến).','Memory error on this line — usually scanf without & before the variable.','Write scanf("%d", &a); (with & before the name).'))}
+else if(q=e.match(/(\d+):(\d+) overflow of Infinity/)){const n=lineOff(code,+q[1]);F.push(pr('e',n,'Chia cho 0 (không chia được).','Kiểm tra số chia khác 0 trước khi chia.','Division by zero.','Check the divisor is not 0 before dividing.'))}
+else if(q=e.match(/(\d+):(\d+) cast failed from type (\w+) to (.+)/)){const n=lineOff(code,+q[1]);F.push(pr('e',n,'Gán sai kiểu dữ liệu: không đổi được '+q[3]+' thành '+q[4].split('\n')[0]+'.','Dùng đúng kiểu: số thì int/float, chuỗi thì char tên[số_ký_tự].','Wrong data type: cannot convert '+q[3]+' to '+q[4].split('\n')[0]+'.','Use the right type: int/float for numbers, char name[size] for strings.'))}
+else if(q=e.match(/cannot find library: (\w+)/))F.push(pr('e',null,'Web chưa hỗ trợ thư viện <'+q[1]+'>.','Với C/C++ trên web hãy dùng stdio, iostream, math, string.h (mảng char) thay cho <'+q[1]+'>.','The <'+q[1]+'> library is not supported here.','In browser C/C++ use stdio, iostream, math, string.h (char arrays) instead of <'+q[1]+'>.'));
+else if(/type (\w+) is not defined/.test(e)){q=e.match(/type (\w+) is not defined/);F.push(pr('e',null,'Kiểu "'+q[1]+'" chưa được hỗ trợ trên web.','Dùng kiểu cơ bản (int, float, double, char) và mảng char thay cho string/vector.','The type "'+q[1]+'" is not supported here.','Use basic types (int, float, double, char) and char arrays instead of string/vector.'))}
+else F.push(pr('e',null,'Chương trình báo lỗi: '+lastLine.slice(0,140),'Đọc thông báo lỗi trong Terminal để biết loại lỗi.','The program reported an error: '+lastLine.slice(0,140),'Read the error in the Terminal to see what kind of error it is.'))}
+return F}
+function mergeFindings(rt,st){const out=[],seen=new Set(),sp=st.filter(f=>f.n),strong=new Set(rt.filter(f=>f.n&&!f.g).map(f=>f.n));
+rt.forEach(f=>{if(f.g&&f.n){const near=sp.filter(x=>x.n===f.n||x.n===f.n-1);if(near.length){near.forEach(x=>{x.s='e';x.hit=1});return}}out.push(f)});
+st.filter(f=>!(f.n&&strong.has(f.n))).sort((a,b)=>(a.s==='e'?0:1)-(b.s==='e'?0:1)||(a.n||999)-(b.n||999)).forEach(f=>{const k=f.s+f.n+f.v[0];if(!seen.has(k)){seen.add(k);out.push(f)}});
+return out.slice(0,8)}
+
+let ERRBUF='',TIMEDOUT=false,LASTF=null;
+function okF(){return[pr('ok',null,'Không thấy lỗi nào trong phần kiểm tra cơ bản.','Nếu kết quả chưa đúng ý, hãy kiểm tra lại thuật toán và dữ liệu nhập.','No problems found in the basic check.','If the result is not what you expect, re-check the logic and the input data.')]}
+function runAssist(){const code=$('#code').value;LASTF=mergeFindings(runtimeFind(TIMEDOUT?'':ERRBUF,code,LANG,TIMEDOUT),lint(code,LANG));if(!LASTF.length)LASTF=okF();renderAI()}
+function manualCheck(){const code=$('#code').value;LASTF=mergeFindings([],lint(code,LANG));if(!LASTF.length)LASTF=okF();renderAI();$('#ai').scrollIntoView({behavior:'smooth',block:'nearest'})}
+function gotoLine(n){const c=$('#code'),ls=c.value.split('\n');let p=0;for(let i=0;i<n-1&&i<ls.length;i++)p+=ls[i].length+1;c.focus();c.setSelectionRange(p,p+(ls[n-1]||'').length);const lh=parseFloat(getComputedStyle(c).lineHeight)||21;c.scrollTop=Math.max(0,(n-3)*lh);sync();$('.ed').scrollIntoView({behavior:'smooth',block:'center'})}
+function renderAI(){const b=$('#aib');b.textContent='';const F=LASTF,k=lg==='vi'?'v':'e';
+if(!F){const p=document.createElement('p');p.textContent=t('aiHint');b.appendChild(p);return}
+F.forEach(f=>{const d=document.createElement('div');d.className='af '+f.s;const ic=document.createElement('span');ic.className='ai';ic.textContent=f.s==='e'?'✖':f.s==='w'?'⚠':'✓';const m=document.createElement('div');m.className='am';const h=document.createElement('b');h.textContent=(f.n?t('line')+' '+f.n+': ':'')+f[k][0];m.appendChild(h);if(f[k][1]){const sm=document.createElement('small');sm.textContent=t('fix')+' '+f[k][1];m.appendChild(sm)}d.appendChild(ic);d.appendChild(m);if(f.n){const g=document.createElement('button');g.textContent=t('goto');g.onclick=()=>gotoLine(f.n);d.appendChild(g)}b.appendChild(d)});
+const p=document.createElement('p');p.textContent=t('aiNote');b.appendChild(p)}
+$('#aiGo').onclick=manualCheck;
+
 const WK={
 js(){let NEED=0;const raw=m=>self.postMessage(m),post=m=>{if(!NEED)raw(m)};
 onmessage=async e=>{NEED=0;raw({ready:1});const L=e.data.stdin.slice();
@@ -277,20 +436,20 @@ raw(NEED?{need:1}:{done:1})}}
 const W={},RD={};let timer,curK=null,INP=[],POS=[],cnt=0,tot=0,echoI=0;
 function mk(k){const src=(k==='cpp'?$('#jscpp').textContent+';':'')+'(function'+String(WK[k]).replace(/^\w+/,'')+')()';return new Worker(URL.createObjectURL(new Blob([src],{type:'text/javascript'})))}
 function put(s,c){if(!s||tot>2e5)return;tot+=s.length;const n=document.createElement('span');if(c)n.className=c;n.textContent=s;$('#out').appendChild(n)}
-function emit(s,c){while(s.length){const room=echoI<INP.length?POS[echoI]-cnt:Infinity;if(room>=s.length){put(s,c);cnt+=s.length;return}put(s.slice(0,room),c);cnt+=room;s=s.slice(room);put(INP[echoI]+'\n','in');echoI++}}
+function emit(s,c){if(c==='err')ERRBUF+=s;while(s.length){const room=echoI<INP.length?POS[echoI]-cnt:Infinity;if(room>=s.length){put(s,c);cnt+=s.length;return}put(s.slice(0,room),c);cnt+=room;s=s.slice(room);put(INP[echoI]+'\n','in');echoI++}}
 function flushEchoes(){while(echoI<INP.length){put(INP[echoI]+'\n','in');echoI++}}
 function busy(b){isBusy=b;$('#run').classList.toggle('stop',b);$('#run').textContent=t(b?'stop':'run')}
 function arm(ms){clearTimeout(timer);timer=setTimeout(()=>kill('timeout'),ms)}
-function kill(msg){clearTimeout(timer);if(curK){W[curK]&&W[curK].terminate();delete W[curK];RD[curK]=0;curK=null}const i=document.querySelector('.tin');if(i)i.remove();if(msg)emit('\n'+t(msg)+'\n','err');busy(false);setSt('ready')}
+function kill(msg){clearTimeout(timer);if(curK){W[curK]&&W[curK].terminate();delete W[curK];RD[curK]=0;curK=null}const i=document.querySelector('.tin');if(i)i.remove();if(msg==='timeout')TIMEDOUT=true;if(msg)emit('\n'+t(msg)+'\n','err');busy(false);setSt('ready');if(msg==='timeout')runAssist()}
 function ask(){setSt('waiting');const i=document.createElement('input');i.className='tin';i.enterKeyHint='send';i.autocapitalize='off';i.autocomplete='off';i.spellcheck=false;i.setAttribute('autocorrect','off');
 i.onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();INP.push(i.value);exec()}};$('#out').appendChild(i);i.focus()}
-function exec(){const k=LANGS[LANG].k;$('#out').textContent='';cnt=0;tot=0;echoI=0;busy(true);curK=k;
+function exec(){ERRBUF='';TIMEDOUT=false;const k=LANGS[LANG].k;$('#out').textContent='';cnt=0;tot=0;echoI=0;busy(true);curK=k;
 const w=W[k]||(W[k]=mk(k));const first=!RD[k];setSt(first&&k==='py'?'loading':'running');arm(first?90000:10000);
 w.onmessage=e=>{const d=e.data;
 if(d.ready){RD[k]=1;setSt('running');arm(10000)}
 if(d.o!=null)emit(d.o,d.err?'err':'');
 if(d.need){clearTimeout(timer);curK=null;POS[INP.length]=cnt;ask()}
-if(d.done){clearTimeout(timer);curK=null;flushEchoes();busy(false);setSt('done')}};
+if(d.done){clearTimeout(timer);curK=null;flushEchoes();busy(false);setSt('done');runAssist()}};
 w.onerror=e=>{emit((e.message||'Error')+'\n','err');kill()};
 w.postMessage({code:$('#code').value,stdin:INP.slice()})}
 $('#run').onclick=()=>{if(isBusy){kill();return}INP=[];POS=[];exec()};
