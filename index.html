@@ -108,12 +108,14 @@ body{touch-action:manipulation}
 .tb{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;padding:8px;border-top:1px solid var(--bd)}
 .tb button{min-width:0;min-height:50px;padding:0;display:flex;align-items:center;justify-content:center;border-radius:10px;border:1px solid var(--bd);background:transparent}
 .tb #clr{color:var(--er);grid-column:span 2}.tb svg{width:24px;height:24px}.tb .g1{color:var(--a)}.tb .g2{color:var(--ok)}
+.logo svg{flex:none;filter:drop-shadow(0 0 6px rgba(34,211,238,.55))}
+.ver{text-align:center;color:var(--mu);font-size:12px;margin:2px 0 0}
 </style>
 </head>
 <body>
 <div class="wrap">
 <header>
-<div class="logo"><span class="dot"></span><b>TigerIT</b></div>
+<div class="logo"><svg viewBox="0 0 32 32" width="30" height="30" fill="none" stroke="url(#lgrad)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><defs><linearGradient id="lgrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#22d3ee"/><stop offset="1" stop-color="#a855f7"/></linearGradient></defs><path d="M12 9l-6 7 6 7M20 9l6 7-6 7M18 7l-4 18"/></svg><b>TigerIT</b></div>
 <button class="ib" id="inst" hidden data-i="install"></button><button class="ib" id="save" data-t="dl"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 17v3h16v-3"/></svg></button><button class="ib" id="open" data-t="open"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15V3m0 0L8 7m4-4l4 4M4 17v3h16v-3"/></svg></button><button class="ib" id="lg">VI/EN</button><button class="ib" id="th" aria-label="theme">◐</button>
 </header>
 <div class="selw"><select id="lang"></select></div>
@@ -128,6 +130,7 @@ body{touch-action:manipulation}
 <pre id="out"></pre>
 </section>
 <section class="card" id="ai"><div class="bar"><i></i><i></i><i></i><em data-i="aiT"></em><button id="aiGo" data-t="tCheck"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="6"/><path d="M20 20l-4.5-4.5"/></svg></button></div><div id="aib"></div></section>
+<p class="ver">TigerIT · v26</p>
 <input type="file" id="file" hidden>
 </div>
 <div id="toast"></div>
