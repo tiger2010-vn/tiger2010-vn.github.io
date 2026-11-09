@@ -130,7 +130,7 @@ body{touch-action:manipulation}
 <pre id="out"></pre>
 </section>
 <section class="card" id="ai"><div class="bar"><i></i><i></i><i></i><em data-i="aiT"></em><button id="aiGo" data-t="tCheck"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="6"/><path d="M20 20l-4.5-4.5"/></svg></button></div><div id="aib"></div></section>
-<p class="ver">TigerIT · v26</p>
+<p class="ver" id="ver">TigerIT · v27</p>
 <input type="file" id="file" hidden>
 </div>
 <div id="toast"></div>
@@ -190,6 +190,7 @@ lodash/lodash.js:
 </script>
 <script>
 const $=s=>document.querySelector(s);
+const NATIVE=!!(window.Capacitor&&Capacitor.isNativePlatform&&Capacitor.isNativePlatform()),NP=()=>(window.Capacitor&&Capacitor.Plugins)||{};
 const T={vi:{run:'▶ CHẠY',stop:'■ DỪNG',save:'Lưu',open:'Mở file',qs:'Lưu',files:'Tệp',dl:'Tải về',sheetT:'TỆP ĐÃ LƯU',hint:'Tệp được lưu ngay trên thiết bị này, không đưa lên mạng.',empty:'Chưa có tệp nào. Đặt tên rồi bấm Lưu.',lines:'dòng',saved:'Đã lưu',noStore:'Không lưu được trên thiết bị này',overwrite:'Đã có tệp trùng tên. Ghi đè?',delq:'Xóa',saveAsT:'LƯU THÀNH TÊN',dlT:'TẢI VỀ VỚI TÊN',cancel:'Hủy',ph:'Tên file, vd: bai1',needName:'Hãy nhập tên file',aiT:'Trợ lý code',tSelW:'Chọn từ',tSelL:'Chọn dòng',tSelA:'Chọn tất cả',tCpS:'Sao chép phần chọn (hoặc từ đang chạm)',tCut:'Cắt',tPaste:'Dán',tUndo:'Hoàn tác',tRedo:'Làm lại',copiedSel:'Đã sao chép',cut:'Đã cắt',cutNone:'Hãy chọn phần cần cắt trước',noWord:'Chạm vào một từ trong code trước',pasteHint:'Không dán được. Nhấn giữ vào khung code rồi chọn Dán.',tSave:'Lưu',tFiles:'Tệp đã lưu',tCopy:'Sao chép toàn bộ code',tCopyL:'Sao chép dòng hiện tại',tClear:'Xóa tất cả code',tRen:'Đổi tên',tDelAll:'Xóa tất cả file đã lưu',tCheck:'Kiểm tra lỗi',tCopyO:'Sao chép kết quả',clearQ:'Xóa toàn bộ code trong khung?',cleared:'Đã xóa code',copiedL:'Đã sao chép dòng',emptyL:'Dòng này trống',renT:'ĐỔI TÊN FILE',renOk:'Đổi tên',renamed:'Đã đổi tên',exists:'Đã có file trùng tên',delAllQ:'Xóa TẤT CẢ file đã lưu?',delAllDone:'Đã xóa tất cả file',aiCheck:'🔍 Kiểm tra',aiHint:'Bấm “Kiểm tra” hoặc chạy chương trình. Trợ lý sẽ chỉ ra chỗ sai và chỗ còn thiếu.',line:'Dòng',fix:'Gợi ý:',goto:'Đến dòng',aiNote:'Trợ lý chỉ nhận ra các lỗi thường gặp, không kiểm tra được kết quả có đúng đề bài hay không.',share:'Link',copy:'Sao chép',install:'⤓ Cài app',output:'Terminal',ready:'Sẵn sàng',loading:'Đang tải trình chạy…',running:'Đang chạy…',waiting:'Gõ dữ liệu rồi bấm Enter',done:'Hoàn tất',timeout:'Quá 10 giây, đã dừng chương trình.',copied:'Đã sao chép'},
 en:{run:'▶ RUN',stop:'■ STOP',save:'Save',open:'Open file',qs:'Save',files:'Files',dl:'Download',sheetT:'SAVED FILES',hint:'Files are stored on this device only, not uploaded.',empty:'No files yet. Enter a name and tap Save.',lines:'lines',saved:'Saved',noStore:'Cannot save on this device',overwrite:'A file with this name exists. Overwrite?',delq:'Delete',saveAsT:'SAVE AS',dlT:'DOWNLOAD AS',cancel:'Cancel',ph:'File name, e.g. bai1',needName:'Enter a file name',aiT:'Code assistant',tSelW:'Select word',tSelL:'Select line',tSelA:'Select all',tCpS:'Copy selection (or the tapped word)',tCut:'Cut',tPaste:'Paste',tUndo:'Undo',tRedo:'Redo',copiedSel:'Copied',cut:'Cut',cutNone:'Select something to cut first',noWord:'Tap a word in the code first',pasteHint:'Cannot paste. Long-press the editor and choose Paste.',tSave:'Save',tFiles:'Saved files',tCopy:'Copy all code',tCopyL:'Copy current line',tClear:'Clear all code',tRen:'Rename',tDelAll:'Delete all saved files',tCheck:'Check for errors',tCopyO:'Copy output',clearQ:'Clear all code in the editor?',cleared:'Code cleared',copiedL:'Copied line',emptyL:'This line is empty',renT:'RENAME FILE',renOk:'Rename',renamed:'Renamed',exists:'A file with this name exists',delAllQ:'Delete ALL saved files?',delAllDone:'All files deleted',aiCheck:'🔍 Check',aiHint:'Tap “Check” or run the program. The assistant points out mistakes and missing pieces.',line:'Line',fix:'Hint:',goto:'Go to line',aiNote:'The assistant only spots common mistakes; it cannot tell whether the result matches your assignment.',share:'Link',copy:'Copy',install:'⤓ Install',output:'Terminal',ready:'Ready',loading:'Loading runtime…',running:'Running…',waiting:'Type input, then press Enter',done:'Done',timeout:'Over 10 seconds, program stopped.',copied:'Copied'}};
 let lg=(function(){try{return localStorage.lg}catch(e){}})()||(navigator.language.startsWith('vi')?'vi':'en'),stKey='ready',isBusy=false;
@@ -442,7 +443,7 @@ $('#esl').onclick=()=>{const c=$('#code'),r=lineAt(c.value,c.selectionStart);sel
 $('#esa').onclick=()=>selRange(0,$('#code').value.length);
 $('#ecp').onclick=()=>{const c=$('#code');let a=c.selectionStart,b=c.selectionEnd;if(a===b){const r=wordAt(c.value,a);a=r[0];b=r[1]}const x=c.value.slice(a,b);if(!x){toast(t('noWord'));return}copyText(x,t('copiedSel')+': '+short(x))};
 $('#ecu').onclick=async()=>{const c=$('#code'),a=c.selectionStart,b=c.selectionEnd;if(a===b){toast(t('cutNone'));return}const x=c.value.slice(a,b);await copyText(x,t('cut')+': '+short(x));delSel(c,a,b)};
-$('#epa').onclick=async()=>{const c=$('#code');try{const x=await navigator.clipboard.readText();if(x){c.focus();ins(c,x)}else toast(t('pasteHint'))}catch(e){toast(t('pasteHint'))}};
+$('#epa').onclick=async()=>{const c=$('#code');try{const x=(NATIVE&&NP().Clipboard)?String((await NP().Clipboard.read()).value||''):await navigator.clipboard.readText();if(x){c.focus();ins(c,x)}else toast(t('pasteHint'))}catch(e){toast(t('pasteHint'))}};
 $('#eun').onclick=()=>{$('#code').focus();try{document.execCommand('undo')}catch(e){}};
 $('#ere').onclick=()=>{$('#code').focus();try{document.execCommand('redo')}catch(e){}};
 document.querySelectorAll('.tb button').forEach(b=>{b.onmousedown=e=>e.preventDefault()});
@@ -498,10 +499,11 @@ w.postMessage({code:$('#code').value,stdin:INP.slice()})}
 $('#run').onclick=()=>{if(isBusy){kill();return}INP=[];POS=[];exec()};
 
 const isIOS=/iPad|iPhone|iPod/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
-async function copyText(x,msg){let ok=false;try{await navigator.clipboard.writeText(x);ok=true}catch(e){}
+async function copyText(x,msg){let ok=false;if(NATIVE&&NP().Clipboard){try{await NP().Clipboard.write({string:x});ok=true}catch(e){}}if(!ok){try{await navigator.clipboard.writeText(x);ok=true}catch(e){}}
 if(!ok){const t=document.createElement('textarea');t.value=x;t.setAttribute('readonly','');t.style.cssText='position:fixed;top:0;left:0;opacity:0;font-size:16px';document.body.appendChild(t);t.select();t.setSelectionRange(0,x.length);try{ok=document.execCommand('copy')}catch(e){}t.remove()}
 if(ok)toast(msg||t('copied'));else prompt('Copy:',x)}
 async function saveFile(name){const text=$('#code').value;
+if(NATIVE&&NP().Filesystem&&NP().Share){try{const r=await NP().Filesystem.writeFile({path:name,data:text,directory:'CACHE',encoding:'utf8'});await NP().Share.share({title:name,url:r.uri,dialogTitle:name})}catch(e){if(!/cancel|dismiss/i.test(String(e&&e.message||e)))copyText(text)}return}
 if(isIOS){try{const f=new File([text],name,{type:'text/plain'});if(navigator.canShare&&navigator.canShare({files:[f]})){await navigator.share({files:[f]});return}}catch(e){if(e&&e.name==='AbortError')return}copyText(text);return}
 const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([text],{type:'text/plain'}));a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{a.remove();URL.revokeObjectURL(a.href)},4000)}
 $('#save').onclick=()=>askName(t('dlT'),curName||'',t('dl'),saveFile);
@@ -551,11 +553,12 @@ addEventListener('pagehide',saveDraft);document.addEventListener('visibilitychan
 let l0='python';
 try{const o=JSON.parse(localStorage[DK]||'null');if(o&&o.d&&typeof o.d==='object'){Object.assign(DR,o.d);if(LANGS[o.l])l0=o.l;if(o.id&&getFiles().some(x=>x.id===o.id)){curId=o.id;curName=o.n}}}catch(e){}
 LANG=l0;{const d=DR[l0];$('#code').value=(typeof d==='string'&&d.trim())?d:TPL[l0]}
+if(NATIVE)$('#ver').textContent+=' · app';
 setLang(l0);
 let dip=null;addEventListener('beforeinstallprompt',e=>{e.preventDefault();dip=e;$('#inst').hidden=false});
 $('#inst').onclick=async()=>{if(!dip)return;dip.prompt();try{await dip.userChoice}catch(e){}dip=null;$('#inst').hidden=true};
 addEventListener('appinstalled',()=>{$('#inst').hidden=true});
-if('serviceWorker' in navigator&&location.protocol.indexOf('http')===0)addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
+if('serviceWorker' in navigator&&!NATIVE&&location.protocol.indexOf('http')===0)addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
 try{if(location.hash.length>1){const d=JSON.parse(decodeURIComponent(escape(atob(location.hash.slice(1)))));if(LANGS[d.l]){LANG=d.l;setLang(d.l)}$('#code').value=d.c||'';curId=null;curName=null;updFn();render();saveDraft()}}catch(e){}
 tr();
 </script>
