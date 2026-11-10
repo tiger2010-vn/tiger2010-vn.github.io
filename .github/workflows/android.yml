@@ -8,7 +8,7 @@ permissions:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
 
@@ -34,21 +34,24 @@ jobs:
 
       - name: App icon, splash and colors
         run: |
+          sudo apt-get update -y
+          sudo apt-get install -y imagemagick
+          if command -v magick >/dev/null 2>&1; then CV="magick"; ID="magick identify"; else CV="convert"; ID="identify"; fi
           RES=android/app/src/main/res
           for pair in mdpi:48 hdpi:72 xhdpi:96 xxhdpi:144 xxxhdpi:192; do
             d=${pair%%:*}; s=${pair##*:}
-            convert icon-512.png -resize ${s}x${s} $RES/mipmap-$d/ic_launcher.png
-            convert icon-512.png -resize ${s}x${s} $RES/mipmap-$d/ic_launcher_round.png
+            $CV icon-512.png -resize ${s}x${s} $RES/mipmap-$d/ic_launcher.png
+            $CV icon-512.png -resize ${s}x${s} $RES/mipmap-$d/ic_launcher_round.png
           done
           for pair in mdpi:108 hdpi:162 xhdpi:216 xxhdpi:324 xxxhdpi:432; do
             d=${pair%%:*}; s=${pair##*:}
-            convert icon-512.png -resize ${s}x${s} $RES/mipmap-$d/ic_launcher_foreground.png
+            $CV icon-512.png -resize ${s}x${s} $RES/mipmap-$d/ic_launcher_foreground.png
           done
           sed -i 's|#FFFFFF|#05070D|' $RES/values/ic_launcher_background.xml
           sed -i 's|<item name="android:background">@null</item>|<item name="android:background">@null</item><item name="android:statusBarColor">#05070D</item><item name="android:navigationBarColor">#05070D</item>|' $RES/values/styles.xml
           for f in $(find $RES -name splash.png); do
-            size=$(identify -format "%wx%h" "$f")
-            convert -size "$size" xc:'#05070d' \( icon-512.png -resize 256x256 \) -gravity center -composite "$f"
+            size=$($ID -format "%wx%h" "$f")
+            $CV -size "$size" xc:'#05070d' \( icon-512.png -resize 256x256 \) -gravity center -composite "$f"
           done
 
       - name: Sync web files
